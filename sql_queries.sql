@@ -1,8 +1,15 @@
-/* A crime has taken place and the detective needs your help. The detective gave you the crime scene report, but you somehow lost it. You vaguely remember that the crime was a ​murder​ that occurred sometime on ​Jan.15, 2018​ and that it took place in ​SQL City​. Start by retrieving the corresponding crime scene report from the police department’s database
+/*
+🕵️‍♂️ **A Crime Has Occurred**:
 
-Exploring the Database Structure
-Experienced SQL users can often use database queries to infer the structure of a database. But each database system has different ways of managing this information. The SQL Murder Mystery is built using SQLite. Use this SQL command to find the tables in the Murder Mystery database.*/
+A crime has taken place, and the detective needs your help. The detective provided you with the crime scene report, but unfortunately, you’ve misplaced it. You vaguely remember that the crime was a **murder** that occurred on **January 15, 2018**, in **SQL City**.
 
+📋 Your first task is to retrieve the crime scene report from the police department's database.
+
+## 🗂️ Exploring the Database Structure:
+Experienced SQL users often infer the structure of a database using queries. However, each database system stores this information differently. The **SQL Murder Mystery** is built using **SQLite**.
+
+🛠️ Use the following SQL command to discover the tables in the Murder Mystery database:
+*/
 SELECT name 
   FROM sqlite_master
  where type = 'table'
@@ -18,10 +25,13 @@ get_fit_now_check_in
 income
 solution
 
+/*
+🕵️‍♂️ **Initial Crime Statement**:
 
+According to the police department's statement, the crime was a **murder** that took place on **January 15, 2018**, in **SQL City**.
 
- /* As per initial statement released by police department about the crime details:  the crime was a ​murder​ that occurred sometime on ​Jan.15, 2018​ and that it took place in ​SQL City and we will start our investigation from here */
-
+🚨 We will begin our investigation based on this information.
+*/
  SELECT sql 
   FROM sqlite_master
  where name = 'crime_scene_report'
@@ -41,11 +51,13 @@ WHERE date = 20180115 AND city = 'SQL City' AND type = 'murder'
 date	type	description	city
 20180115	murder	Security footage shows that there were 2 witnesses. The first witness lives at the last house on "Northwestern Dr". The second witness, named Annabel, lives somewhere on "Franklin Ave".	SQL City
 
+/*
+🔍 **Second Clue Uncovered**:
 
+In the "description," we learn that there are **2 witnesses** to the crime. We have their **addresses** and will investigate further by reviewing their responses to the police interviews. 
 
-/* Here comes the second clue in "description" : there are 2 witnesses for the crime and we have their addresses to investigate further by seeing their responses for interviews conducted by police
-but before that we need to find the name of these 2 witnesses and their IDs to see the interviews*/
-
+📝 But before we proceed, we need to find the **names** and **IDs** of these 2 witnesses in order to access the interviews.
+*/
 SELECT DISTINCT id,name, address_number, address_street_name
 FROM person
 WHERE ( address_street_name LIKE '%Northwestern Dr%'
@@ -105,9 +117,15 @@ id	name	address_number	address_street_name
 89906	Kinsey Erickson	309	Northwestern Dr
 16371	Annabel Miller	103	Franklin Ave
 
+/*
+✅ **Witnesses Identified**:
 
+We have located the **two witnesses** involved in the case. Their witness IDs are:
 
-/* Found the 2 witnesses which are having IDs: 14887 and 16371 */
+- 🆔 **14887**
+- 🆔 **16371**
+*/
+
 SELECT *
 FROM interview
 WHERE person_id IN ( 14887, 16371)
@@ -116,9 +134,13 @@ person_id	transcript
 14887	I heard a gunshot and then saw a man run out. He had a "Get Fit Now Gym" bag. The membership number on the bag started with "48Z". Only gold members have those bags. The man got into a car with a plate that included "H42W".
 16371	I saw the murder happen, and I recognized the killer from my gym when I was working out last week on January the 9th.
 
+/*
+📝 **Witness Testimony**:
 
+According to the transcripts, the witnesses reported seeing a man associated with **"Get Fit Now Gym"**. He is identified as a **Gold Member** due to his gym bag and membership ID. The man was last seen at the gym. 🏋️‍♂️
 
-/* As per the above transcripts, witnesses saw a man having "Get Fit Now Gym" which is a gold member because of the bag series and ID and last seen at gym */
+🎥 Here's what we know so far:*/
+
 SELECT *
 FROM get_fit_now_member
 JOIN get_fit_now_check_in
@@ -131,9 +153,11 @@ id	person_id	name	membership_start_date	membership_status	membership_id	check_in
 48Z7A	28819	Joe Germuska	20160305	gold	48Z7A	20180109	1600	1730
 48Z55	67318	Jeremy Bowers	20160101	gold	48Z55	20180109	1530	1700
 
+/*
+🔍 **Suspect Matches**:
 
-
-/* As per the above criteria, 2 people got matches but we have another clue that murderer have a car with license plate H42W*/
+Based on the above criteria, we have identified **2 potential matches**. However, there's another clue: the murderer owns a car with the license plate **H42W**. 🚗🔑
+*/
 SELECT *
 FROM drivers_license
 JOIN person
@@ -144,17 +168,32 @@ AND plate_number LIKE '%H42W%'
 id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model	id	name	license_id	address_number	address_street_name	ssn
 423327	30	70	brown	brown	male	0H42W2	Chevrolet	Spark LS	67318	Jeremy Bowers	423327	530	Washington Pl, Apt 3A	871539279
 
-/* Woooh!!!! we got a KILLER */
+/*
+🎉 **Woohoo! We Got the Killer!** 🎉
+
+After following all the clues, we've finally identified the **KILLER**! 🕵️‍♂️🚨
+
+![Victory GIF](https://media.giphy.com/media/3o6Zt8MgUuvSbkZYWc/giphy.gif) <!-- Example GIF for celebration -->
+*/
+
 INSERT INTO solution VALUES (1, 'Jeremy Bowers');
         
         SELECT value FROM solution;
 
 /* value
-Congrats, you found the murderer! But wait, there's more... If you think you're up for a challenge, try querying the interview transcript of the murderer to find the real villain behind this crime. If you feel especially confident in your SQL skills, try to complete this final step with no more than 2 queries. Use this same INSERT statement with your new suspect to check your answer.*/
+/*
+🎉 **Congratulations! You Found the Murderer!** 🎉
+
+But wait, there's more... If you think you're up for a challenge, try querying the interview transcript of the murderer to uncover the real villain behind this crime. 🕵️‍♂️
+
+💪 If you feel especially confident in your SQL skills, attempt to complete this final step with no more than **2 queries**. Use the same **INSERT** statement with your new suspect to verify your answer. 🔍
+*/ */
 
 
+/*
+🔍 **Need to Check the Killer's Statements About the Murder**:
+*/ 
 
-/* Need to check KILLER statements about the murder*/
 SELECT *
 FROM interview
 WHERE person_id = 67318
@@ -163,7 +202,9 @@ person_id	transcript
 67318	I was hired by a woman with a lot of money. I don't know her name but I know she's around 5'5" (65") or 5'7" (67"). She has red hair and she drives a Tesla Model S. I know that she attended the SQL Symphony Concert 3 times in December 2017.
 
 
-/*With all the descriptions by the KILLER, queried below:*/
+/*
+With all the descriptions provided by the KILLER, queried below:
+*/
 SELECT *
 FROM drivers_license
 JOIN person
@@ -183,13 +224,20 @@ id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model	id	nam
 202298	68	66	green	red	female	500123	Tesla	Model S	99716	Miranda Priestly	202298	1883	Golden Ave	987756388	99716	1143	SQL Symphony Concert	20171229
 
 
-/* Wooohhh, this time, let's see */
+/*
+🎉 **Woohoo! This Time, Let's See** 👀
+*/
+
 INSERT INTO solution VALUES (1, 'Miranda Priestly');
         
         SELECT value FROM solution;
 
-/*value
-Congrats, you found the brains behind the murder! Everyone in SQL City hails you as the greatest SQL detective of all time. Time to break out the champagne! */
+/*
+🥳 **Congratulations!** 🎉
 
+You found the brains behind the murder! Everyone in **SQL City** hails you as the greatest SQL detective of all time. 🍾 Time to break out the champagne! 
 
-/* MURDERER is Miranda Priestly */
+![Celebration GIF](https://media.giphy.com/media/l4FGGmU0kH9JdpZPu/giphy.gif) <!-- Example GIF for celebration -->
+
+**MURDERER:** Miranda Priestly
+*/
