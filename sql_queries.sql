@@ -7,7 +7,6 @@ SELECT name
   FROM sqlite_master
  where type = 'table'
 
-
 --name
 crime_scene_report
 drivers_license
@@ -26,7 +25,7 @@ solution
  SELECT sql 
   FROM sqlite_master
  where name = 'crime_scene_report'
-
+ 
 sql
 CREATE TABLE crime_scene_report (
         date integer,
@@ -35,13 +34,13 @@ CREATE TABLE crime_scene_report (
         city text
     )
 
-
 SELECT *
 FROM crime_scene_report
 WHERE date = 20180115 AND city = 'SQL City' AND type = 'murder'
 
 date	type	description	city
 20180115	murder	Security footage shows that there were 2 witnesses. The first witness lives at the last house on "Northwestern Dr". The second witness, named Annabel, lives somewhere on "Franklin Ave".	SQL City
+
 
 
 /* Here comes the second clue in "description" : there are 2 witnesses for the crime and we have their addresses to investigate further by seeing their responses for interviews conducted by police
@@ -107,6 +106,7 @@ id	name	address_number	address_street_name
 16371	Annabel Miller	103	Franklin Ave
 
 
+
 /* Found the 2 witnesses which are having IDs: 14887 and 16371 */
 SELECT *
 FROM interview
@@ -116,6 +116,9 @@ person_id	transcript
 14887	I heard a gunshot and then saw a man run out. He had a "Get Fit Now Gym" bag. The membership number on the bag started with "48Z". Only gold members have those bags. The man got into a car with a plate that included "H42W".
 16371	I saw the murder happen, and I recognized the killer from my gym when I was working out last week on January the 9th.
 
+
+
+/* As per the above transcripts, witnesses saw a man having "Get Fit Now Gym" which is a gold member because of the bag series and ID and last seen at gym */
 SELECT *
 FROM get_fit_now_member
 JOIN get_fit_now_check_in
@@ -129,6 +132,8 @@ id	person_id	name	membership_start_date	membership_status	membership_id	check_in
 48Z55	67318	Jeremy Bowers	20160101	gold	48Z55	20180109	1530	1700
 
 
+
+/* As per the above criteria, 2 people got matches but we have another clue that murderer have a car with license plate H42W*/
 SELECT *
 FROM drivers_license
 JOIN person
@@ -139,6 +144,26 @@ AND plate_number LIKE '%H42W%'
 id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model	id	name	license_id	address_number	address_street_name	ssn
 423327	30	70	brown	brown	male	0H42W2	Chevrolet	Spark LS	67318	Jeremy Bowers	423327	530	Washington Pl, Apt 3A	871539279
 
+/* Woooh!!!! we got a KILLER */
+INSERT INTO solution VALUES (1, 'Jeremy Bowers');
+        
+        SELECT value FROM solution;
+
+/* value
+Congrats, you found the murderer! But wait, there's more... If you think you're up for a challenge, try querying the interview transcript of the murderer to find the real villain behind this crime. If you feel especially confident in your SQL skills, try to complete this final step with no more than 2 queries. Use this same INSERT statement with your new suspect to check your answer.*/
+
+
+
+/* Need to check KILLER statements about the murder*/
+SELECT *
+FROM interview
+WHERE person_id = 67318
+
+person_id	transcript
+67318	I was hired by a woman with a lot of money. I don't know her name but I know she's around 5'5" (65") or 5'7" (67"). She has red hair and she drives a Tesla Model S. I know that she attended the SQL Symphony Concert 3 times in December 2017.
+
+
+/*With all the descriptions by the KILLER, queried below:*/
 SELECT *
 FROM drivers_license
 JOIN person
@@ -158,9 +183,13 @@ id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model	id	nam
 202298	68	66	green	red	female	500123	Tesla	Model S	99716	Miranda Priestly	202298	1883	Golden Ave	987756388	99716	1143	SQL Symphony Concert	20171229
 
 
+/* Wooohhh, this time, let's see */
 INSERT INTO solution VALUES (1, 'Miranda Priestly');
         
         SELECT value FROM solution;
 
-value
-Congrats, you found the brains behind the murder! Everyone in SQL City hails you as the greatest SQL detective of all time. Time to break out the champagne!
+/*value
+Congrats, you found the brains behind the murder! Everyone in SQL City hails you as the greatest SQL detective of all time. Time to break out the champagne! */
+
+
+/* MURDERER is Miranda Priestly */
