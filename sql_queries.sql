@@ -105,3 +105,62 @@ id	name	address_number	address_street_name
 15171	Weldon Penso	311	Northwestern Dr
 89906	Kinsey Erickson	309	Northwestern Dr
 16371	Annabel Miller	103	Franklin Ave
+
+
+/* Found the 2 witnesses which are having IDs: 14887 and 16371 */
+SELECT *
+FROM interview
+WHERE person_id IN ( 14887, 16371)
+
+person_id	transcript
+14887	I heard a gunshot and then saw a man run out. He had a "Get Fit Now Gym" bag. The membership number on the bag started with "48Z". Only gold members have those bags. The man got into a car with a plate that included "H42W".
+16371	I saw the murder happen, and I recognized the killer from my gym when I was working out last week on January the 9th.
+
+SELECT *
+FROM get_fit_now_member
+JOIN get_fit_now_check_in
+ON get_fit_now_member.id = get_fit_now_check_in.membership_id
+WHERE membership_status LIKE '%gold%'
+AND membership_id LIKE '48Z%'
+AND check_in_date = 20180109
+
+id	person_id	name	membership_start_date	membership_status	membership_id	check_in_date	check_in_time	check_out_time
+48Z7A	28819	Joe Germuska	20160305	gold	48Z7A	20180109	1600	1730
+48Z55	67318	Jeremy Bowers	20160101	gold	48Z55	20180109	1530	1700
+
+
+SELECT *
+FROM drivers_license
+JOIN person
+ON drivers_license.id = person.license_id
+WHERE person.id IN ( 28819, 67318)
+AND plate_number LIKE '%H42W%'
+
+id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model	id	name	license_id	address_number	address_street_name	ssn
+423327	30	70	brown	brown	male	0H42W2	Chevrolet	Spark LS	67318	Jeremy Bowers	423327	530	Washington Pl, Apt 3A	871539279
+
+SELECT *
+FROM drivers_license
+JOIN person
+ON drivers_license.id = person.license_id
+JOIN facebook_event_checkin
+ON person.id = facebook_event_checkin.person_id
+WHERE height >= 65 AND height <= 67
+AND hair_color LIKE '%Red%'
+AND car_make LIKE '%Tesla%'
+AND car_model LIKE '%S%'
+AND event_name LIKE '%SQL Symphony%'
+AND date >= 20171201 AND date < 20180101
+
+id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model	id	name	license_id	address_number	address_street_name	ssn	person_id	event_id	event_name	date
+202298	68	66	green	red	female	500123	Tesla	Model S	99716	Miranda Priestly	202298	1883	Golden Ave	987756388	99716	1143	SQL Symphony Concert	20171206
+202298	68	66	green	red	female	500123	Tesla	Model S	99716	Miranda Priestly	202298	1883	Golden Ave	987756388	99716	1143	SQL Symphony Concert	20171212
+202298	68	66	green	red	female	500123	Tesla	Model S	99716	Miranda Priestly	202298	1883	Golden Ave	987756388	99716	1143	SQL Symphony Concert	20171229
+
+
+INSERT INTO solution VALUES (1, 'Miranda Priestly');
+        
+        SELECT value FROM solution;
+
+value
+Congrats, you found the brains behind the murder! Everyone in SQL City hails you as the greatest SQL detective of all time. Time to break out the champagne!
