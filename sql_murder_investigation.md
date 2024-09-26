@@ -9,6 +9,7 @@ A crime has taken place, and the detective needs your help. The detective provid
 Experienced SQL users often infer the structure of a database using queries. However, each database system stores this information differently. The **SQL Murder Mystery** is built using **SQLite**.
 
 🛠️ Use the following SQL command to discover the tables in the Murder Mystery database:
+
 */
 SELECT name 
   FROM sqlite_master
@@ -31,6 +32,7 @@ solution
 According to the police department's statement, the crime was a **murder** that took place on **January 15, 2018**, in **SQL City**.
 
 🚨 We will begin our investigation based on this information.
+
 */
  SELECT sql 
   FROM sqlite_master
@@ -57,6 +59,7 @@ date	type	description	city
 In the "description," we learn that there are **2 witnesses** to the crime. We have their **addresses** and will investigate further by reviewing their responses to the police interviews. 
 
 📝 But before we proceed, we need to find the **names** and **IDs** of these 2 witnesses in order to access the interviews.
+
 */
 SELECT DISTINCT id,name, address_number, address_street_name
 FROM person
@@ -157,6 +160,7 @@ id	person_id	name	membership_start_date	membership_status	membership_id	check_in
 🔍 **Suspect Matches**:
 
 Based on the above criteria, we have identified **2 potential matches**. However, there's another clue: the murderer owns a car with the license plate **H42W**. 🚗🔑
+
 */
 SELECT *
 FROM drivers_license
